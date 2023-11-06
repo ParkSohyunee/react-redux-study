@@ -8,6 +8,13 @@ import rootReducer from "./reducers";
  * redux-toolkit을 사용하는 것이 표준
  * 하지만 기본 방식을 이해하고 배우기 위해 실습해봄
  */
-const store = createStore(rootReducer);
+const store = createStore(
+  rootReducer,
+  /**
+   * 리덕스 dev_tools는 리덕스 스토어의 미들웨어로 연동해야 함
+   * Diff 에서 Chart로 리덕스 State 변화와 트리구조를 확인할 수 있음!!
+   */
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
 
 export default store;
