@@ -8,11 +8,21 @@ import { connect } from "react-redux";
 //   removeTodoActionCreator,
 //   removeAllActionCreator,
 // } from "../actions";
+
+/** ducks 패턴일때 import 하기 */
+// import {
+//   addTodoActionCreator,
+//   removeTodoActionCreator,
+//   removeAllActionCreator,
+// } from "../ducks/todoDuck";
+
+/** redux-actions 사용할때 import 하기 */
 import {
-  addTodoActionCreator,
-  removeTodoActionCreator,
-  removeAllActionCreator,
-} from "../ducks/todoDuck";
+  addTodo as addTodoActionCreator,
+  removeTodo as removeTodoActionCreator,
+  removeAll as removeAllActionCreator,
+} from "../actions/todoActions";
+
 import TodoApp from "../../components/TodoApp";
 
 /**
