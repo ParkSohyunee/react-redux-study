@@ -52,6 +52,10 @@ function mapDispatchToProps(dispatch, ownProps) {
     removeAllTodo: () => {
       dispatch(removeAllActionCreator());
     },
+    // 비동기 요청 테스트를 위한 함수 추가 - async middleware에서 처리 될 함수
+    triggerAsyncFunction: (asyncFunction) => {
+      dispatch(asyncFunction);
+    },
   };
 }
 
