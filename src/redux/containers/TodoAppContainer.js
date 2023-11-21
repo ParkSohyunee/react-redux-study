@@ -23,6 +23,8 @@ import {
   removeAll as removeAllActionCreator,
 } from "../actions/todoActions";
 
+import addTodoThunkActionCreator from "../thunks/addTodoThunk";
+
 import TodoApp from "../../components/TodoApp";
 
 /**
@@ -44,7 +46,8 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch, ownProps) {
   return {
     addTodo: (text) => {
-      dispatch(addTodoActionCreator(text));
+      // dispatch(addTodoActionCreator(text));
+      dispatch(addTodoThunkActionCreator(text)); // addToDo 함수 호출되면 Thunk 미들웨어에서 처리
     },
     removeTodo: () => {
       dispatch(removeTodoActionCreator());

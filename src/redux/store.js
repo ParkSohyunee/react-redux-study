@@ -2,7 +2,8 @@
 
 import { applyMiddleware, compose, createStore } from "redux";
 import rootReducer from "./reducers";
-import asyncFunctionMiddleware from "./middlewares/asyncFunctionMiddleware";
+// import asyncFunctionMiddleware from "./middlewares/asyncFunctionMiddleware";
+import thunkMiddleware from "redux-thunk";
 
 /**
  * async 함수와 middleware를 연동
@@ -17,7 +18,9 @@ const composeEnhancers =
  */
 const store = createStore(
   rootReducer,
-  composeEnhancers(applyMiddleware(asyncFunctionMiddleware))
+  composeEnhancers(applyMiddleware(thunkMiddleware)) // redux store에 thunk 미들웨어 연동
+
+  // composeEnhancers(applyMiddleware(asyncFunctionMiddleware))
   /**
    * 리덕스 dev_tools는 리덕스 스토어의 미들웨어로 연동해야 함
    * Diff 에서 Chart로 리덕스 State 변화와 트리구조를 확인할 수 있음!!
