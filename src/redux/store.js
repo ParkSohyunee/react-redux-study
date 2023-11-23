@@ -4,6 +4,8 @@ import { applyMiddleware, compose, createStore } from "redux";
 import rootReducer from "./reducers";
 // import asyncFunctionMiddleware from "./middlewares/asyncFunctionMiddleware";
 import thunkMiddleware from "redux-thunk";
+import createSagaMiddleware from "redux-saga";
+import rootSaga from "./sagas";
 
 /**
  * async 함수와 middleware를 연동
@@ -12,13 +14,18 @@ const composeEnhancers =
   window.__REDUX_DEVTOOLS_EXTENSION__COMPOSE__ || compose;
 
 /**
+ * saga 미들웨어 연동
+ */
+const sagaMiddleware = createSagaMiddleware();
+
+/**
  * createStore는 이제 더이상 사용하지 않는 방식
  * redux-toolkit을 사용하는 것이 표준
  * 하지만 기본 방식을 이해하고 배우기 위해 실습해봄
  */
 const store = createStore(
   rootReducer,
-  composeEnhancers(applyMiddleware(thunkMiddleware)) // redux store에 thunk 미들웨어 연동
+  composeEnhancers(applyMiddleware(thunkMiddleware, sagaMiddleware)) // redux store에 thunk 미들웨어, saga 미들웨어 연동
 
   // composeEnhancers(applyMiddleware(asyncFunctionMiddleware))
   /**
@@ -27,5 +34,7 @@ const store = createStore(
    */
   // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
+
+sagaMiddleware.run(rootSaga); // 꼭 호출해주기!!!!!
 
 export default store;
