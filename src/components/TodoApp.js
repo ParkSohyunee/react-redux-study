@@ -6,6 +6,7 @@ export default function TodoApp({
   removeTodo,
   removeAll,
   triggerAsyncFunction,
+  fetchTodo,
 }) {
   const [todo, setTodo] = useState("");
 
@@ -51,6 +52,7 @@ export default function TodoApp({
       >
         비동기 함수 테스트
       </button>
+      <button onClick={fetchTodo}>서버에서 할 일 목록 받아오기</button>
     </>
   );
 }

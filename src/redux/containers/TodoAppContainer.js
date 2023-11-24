@@ -24,6 +24,7 @@ import {
 } from "../actions/todoActions";
 
 import addTodoThunkActionCreator from "../thunks/addTodoThunk";
+import { fetchTodosRequested as fetchTodosRequestedActionCreator } from "../actions/fetchTodoAction";
 
 import TodoApp from "../../components/TodoApp";
 
@@ -33,7 +34,7 @@ import TodoApp from "../../components/TodoApp";
  */
 function mapStateToProps(state, ownProps) {
   return {
-    todoItems: state.todo,
+    todoItems: [...state.todo, ...state.fetchTodos.data],
   };
 }
 
@@ -58,6 +59,10 @@ function mapDispatchToProps(dispatch, ownProps) {
     // 비동기 요청 테스트를 위한 함수 추가 - async middleware에서 처리 될 함수
     triggerAsyncFunction: (asyncFunction) => {
       dispatch(asyncFunction);
+    },
+    // 비동기 함수를 시작하는 fetchTodosRequestedActionCreator 함수를 dispatch하는 함수
+    fetchTodo: () => {
+      dispatch(fetchTodosRequestedActionCreator());
     },
   };
 }
