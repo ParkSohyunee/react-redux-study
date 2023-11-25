@@ -20,7 +20,7 @@ const reducer = handleActions(
       return {
         ...state,
         pending: true,
-        data: [],
+        // data: [],
         error: null,
       };
     },
@@ -29,7 +29,8 @@ const reducer = handleActions(
       return {
         ...state,
         pending: false,
-        data: action.payload.data,
+        // data: action.payload.data,
+        data: state.data.concat(action.payload.data), // 비동기로 받은 할 일 데이터 누적
       };
     },
     // 비동기 요청 실패
