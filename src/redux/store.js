@@ -6,13 +6,42 @@ import rootReducer from "./reducers";
 import thunkMiddleware from "redux-thunk";
 import createSagaMiddleware from "redux-saga";
 import rootSaga from "./sagas";
-import { persistStore, persistReducer } from "redux-persist";
+import { persistStore, persistReducer, createMigrate } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // 로컬스토리지
 import sessionStorage from "redux-persist/es/storage/session"; // 세션스토리지
+
+/**
+ * migrate
+ * 이미 사용자에게 배포된 이후, state 변화가 생겼을 때,
+ * 기존 사용자에게 저장된 데이터를 현재 state에 맞게 변경해주는 기능
+ * (주의)개발자가 실수할 수 있으므로, 꼭 저장이 필요한 데이터만 whitlist에 넣어서 사용하는 것이 좋음!!
+ */
+const migrations = {
+  1: (state) => {
+    return {
+      ...state,
+      fetchTodos: {
+        ...state.fetchTodos,
+        extraData: undefined,
+      },
+    };
+  },
+  2: (state) => {
+    return {
+      ...state,
+      fetchTodos: {
+        ...state.fetchTodos,
+        extraData: null,
+      },
+    };
+  },
+};
 
 const persistConfig = {
   key: "root",
   storage: sessionStorage,
+  version: 2,
+  migrate: createMigrate(migrations, { debug: false }),
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
