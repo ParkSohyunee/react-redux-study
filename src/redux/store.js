@@ -6,6 +6,15 @@ import rootReducer from "./reducers";
 import thunkMiddleware from "redux-thunk";
 import createSagaMiddleware from "redux-saga";
 import rootSaga from "./sagas";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+
+const persistConfig = {
+  key: "root",
+  storage: storage,
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 /**
  * async 함수와 middleware를 연동
@@ -24,7 +33,8 @@ const sagaMiddleware = createSagaMiddleware();
  * 하지만 기본 방식을 이해하고 배우기 위해 실습해봄
  */
 const store = createStore(
-  rootReducer,
+  // rootReducer,
+  persistedReducer,
   composeEnhancers(applyMiddleware(thunkMiddleware, sagaMiddleware)) // redux store에 thunk 미들웨어, saga 미들웨어 연동
 
   // composeEnhancers(applyMiddleware(asyncFunctionMiddleware))
@@ -37,4 +47,5 @@ const store = createStore(
 
 sagaMiddleware.run(rootSaga); // 꼭 호출해주기!!!!!
 
+export const persistor = persistStore(store);
 export default store;
