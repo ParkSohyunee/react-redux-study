@@ -7,11 +7,12 @@ import thunkMiddleware from "redux-thunk";
 import createSagaMiddleware from "redux-saga";
 import rootSaga from "./sagas";
 import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage";
+import storage from "redux-persist/lib/storage"; // 로컬스토리지
+import sessionStorage from "redux-persist/es/storage/session"; // 세션스토리지
 
 const persistConfig = {
   key: "root",
-  storage: storage,
+  storage: sessionStorage,
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
