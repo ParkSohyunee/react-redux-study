@@ -1,12 +1,23 @@
 /** redux를 생성하고 export하는 코드 */
 
-import { applyMiddleware, compose, createStore } from "redux";
+// import { applyMiddleware, compose, createStore } from "redux";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import rootReducer from "./reducers";
 // import asyncFunctionMiddleware from "./middlewares/asyncFunctionMiddleware";
 import thunkMiddleware from "redux-thunk";
 import createSagaMiddleware from "redux-saga";
 import rootSaga from "./sagas";
-import { persistStore, persistReducer, createMigrate } from "redux-persist";
+import {
+  persistStore,
+  persistReducer,
+  createMigrate,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
 import storage from "redux-persist/lib/storage"; // 로컬스토리지
 import sessionStorage from "redux-persist/es/storage/session"; // 세션스토리지
 
@@ -49,8 +60,8 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 /**
  * async 함수와 middleware를 연동
  */
-const composeEnhancers =
-  window.__REDUX_DEVTOOLS_EXTENSION__COMPOSE__ || compose;
+// const composeEnhancers =
+//   window.__REDUX_DEVTOOLS_EXTENSION__COMPOSE__ || compose;
 
 /**
  * saga 미들웨어 연동
@@ -62,18 +73,35 @@ const sagaMiddleware = createSagaMiddleware();
  * redux-toolkit을 사용하는 것이 표준
  * 하지만 기본 방식을 이해하고 배우기 위해 실습해봄
  */
-const store = createStore(
-  // rootReducer,
-  persistedReducer,
-  composeEnhancers(applyMiddleware(thunkMiddleware, sagaMiddleware)) // redux store에 thunk 미들웨어, saga 미들웨어 연동
+// const store = createStore(
+//   // rootReducer,
+//   persistedReducer,
+//   composeEnhancers(applyMiddleware(thunkMiddleware, sagaMiddleware)) // redux store에 thunk 미들웨어, saga 미들웨어 연동
 
-  // composeEnhancers(applyMiddleware(asyncFunctionMiddleware))
-  /**
-   * 리덕스 dev_tools는 리덕스 스토어의 미들웨어로 연동해야 함
-   * Diff 에서 Chart로 리덕스 State 변화와 트리구조를 확인할 수 있음!!
-   */
-  // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-);
+const store = configureStore({
+  reducer: persistedReducer,
+  middleware: () => {
+    const defaultMiddleware = getDefaultMiddleware({
+      /**
+       * redux-persist의 6개 action type을 serializableCheck 무시하기위해.
+       * redux-toolkit을 개발모드에서 사용하게 되면 기본 미들웨어로 serializableCheck가 포함됨
+       * serializable 불가능을 체크하는 예외목록에 넣어주지 않으면 콘솔에 에러가 출력
+       */
+      serializableCheck: {
+        ignoreActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    });
+    return [...defaultMiddleware, sagaMiddleware];
+  },
+});
+
+// composeEnhancers(applyMiddleware(asyncFunctionMiddleware))
+/**
+ * 리덕스 dev_tools는 리덕스 스토어의 미들웨어로 연동해야 함
+ * Diff 에서 Chart로 리덕스 State 변화와 트리구조를 확인할 수 있음!!
+ */
+// window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+// );
 
 sagaMiddleware.run(rootSaga); // 꼭 호출해주기!!!!!
 

@@ -17,11 +17,18 @@ import { connect } from "react-redux";
 // } from "../ducks/todoDuck";
 
 /** redux-actions 사용할때 import 하기 */
+// import {
+//   addTodo as addTodoActionCreator,
+//   removeTodo as removeTodoActionCreator,
+//   removeAll as removeAllActionCreator,
+// } from "../actions/todoActions";
+
+/** todoSlice로부터 action creator import 하기 */
 import {
   addTodo as addTodoActionCreator,
   removeTodo as removeTodoActionCreator,
   removeAll as removeAllActionCreator,
-} from "../actions/todoActions";
+} from "../slices/todoSlice";
 
 import addTodoThunkActionCreator from "../thunks/addTodoThunk";
 import { fetchTodosRequested as fetchTodosRequestedActionCreator } from "../actions/fetchTodoAction";
@@ -47,8 +54,8 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch, ownProps) {
   return {
     addTodo: (text) => {
-      // dispatch(addTodoActionCreator(text));
-      dispatch(addTodoThunkActionCreator(text)); // addToDo 함수 호출되면 Thunk 미들웨어에서 처리
+      dispatch(addTodoActionCreator(text));
+      // dispatch(addTodoThunkActionCreator(text)); // addToDo 함수 호출되면 Thunk 미들웨어에서 처리
     },
     removeTodo: () => {
       dispatch(removeTodoActionCreator());
