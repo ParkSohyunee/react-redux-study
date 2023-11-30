@@ -6,6 +6,7 @@ import store, { persistor } from "./redux/store";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import TodoApp from "./components/TodoApp";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -13,7 +14,8 @@ root.render(
     <Provider store={store}>
       {/* Provider 컴포넌트보다 하위에 위치해야 함 */}
       <PersistGate loading={null} persistor={persistor}>
-        <App />
+        {/* TodoApp 컴포넌트를 redux hook을 사용하도록 변경했기 때문에 가능, (참고 - connect방식은 과거 방식!) */}
+        <TodoApp />
       </PersistGate>
     </Provider>
   </React.StrictMode>
